@@ -2,9 +2,8 @@ import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import routes from '../routes/route.js'; // rotas externas
-import LivrosRoutes from './routes/LivrosRoutes.js';
-import CategoriasRoutes from './routes/CategoriasRoutes.js';
-import EmprestimoRoutes from './routes/EmprestimoRoutes.js';
+import SaboresRoutes from './routes/SaboresRoutes.js';
+import PicoleRoutes from './routes/PicoleRoutes.js';
 import { createServer } from 'http';
 
 
@@ -23,6 +22,6 @@ app.set('views', join(__dirname, '../views'));
 
 // Rotas
 app.use(routes)
-app.listen(3004)
+app.listen(3006)
 // Exporta o handler compatível com Vercel
 export default app;

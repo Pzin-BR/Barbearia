@@ -1,0 +1,38 @@
+<%-include('../cabecalho.ejs')%>
+    <h1><i class="fas fa-ice-cream"></i> Gerenciar Picolés</h1>
+    <a href="/picole/add" class="btn add" style="margin-bottom:32px;">+ Novo Picolé</a>
+    <table class="curso-table" style="margin-top:24px;">
+        <thead>
+            <tr style="background:#e9ecef; color:#333;">
+                <th>Nome</th>
+                <th>Sabor</th>
+                <th>Preço</th>
+                <th>Calorias</th>
+                <th style="text-align:center;" colspan="2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for (const{nomePicole, precoPicole, saborPicole, caloriasPicole, ingredientesPicole, id} of Picole) {%>
+                <tr>
+                    <td>
+                        <%=nomePicole%>
+                    </td>
+                    <td>
+                        <%=saborPicole%>
+                    </td>
+                    <td>
+                        R$ <%=precoPicole%>,00
+                    </td>
+                    <td>
+                        <%=caloriasPicole%> kcal
+                    </td>
+                    <td><a href="/picole/edt/<%=id%>" class="btn edit"><i class="fa-solid fa-pen">‌</i></a><a
+                            href="/picole/del/<%=id%>" class="btn delete"
+                            onclick="return confirm('Tem certeza que deseja excluir este picole?')"><i
+                                class="fa-solid fa-box-archive">‌</i></a></td>
+                </tr>
+                <%}%>
+        </tbody>
+    </table>
+
+    <%-include('../rodape.ejs')%>

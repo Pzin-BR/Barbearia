@@ -1,0 +1,30 @@
+<%-include('../cabecalho.ejs')%>
+    <h1 style="text-align:center; margin-bottom:32px; color:#333;"><i class="fas fa-snowflake"></i> Gerenciar Sabores</h1>
+    <a href="/sabores/add" class="btn add" style="margin-bottom:32px;">+ Novo Sabor</a>
+    <table class="curso-table" style="margin-top:24px;">
+        <thead>
+            <tr style="background:#e9ecef; color:#333;">
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th colspan="2" style="text-align:center;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%for (const{nomeSabor, descricaoSabor, id} of Sabores) {%>
+                <tr>
+                    <td>
+                        <%=nomeSabor%>
+                    </td>
+                    <td>
+                        <%=descricaoSabor%>
+                    </td>
+                    <td><a href="/sabores/edt/<%=id%>" class="btn edit"><i class="fa-solid fa-pen">‌</i></a> <a
+                            href="/sabores/del/<%=id%>" class="btn delete"
+                            onclick="return confirm('Tem certeza que deseja excluir este sabor?')"><i
+                                class="fa-solid fa-box-archive">‌</i></a></td>
+                </tr>
+                <%}%>
+        </tbody>
+    </table>
+
+    <%-include('../rodape.ejs')%>
