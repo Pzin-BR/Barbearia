@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Lista de Agendamentos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+<div class="container">
+    <h1 class="mb-4">Agendamentos</h1>
+
+    <a href="/agendamento/add" class="btn btn-success mb-3">Novo Agendamento</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Cliente</th>
+                <th>Barbeiro</th>
+                <th>Serviço</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% (Agendamento || []).forEach(function(item){ %>
+            <tr>
+                <td>
+                    <%= (item.dataAgendamento && item.dataAgendamento.toISOString) ? item.dataAgendamento.toISOString().split('T')[0] : (item.dataAgendamento ? String(item.dataAgendamento).substr(0,10) : '') %>
+                </td>
+                <td><%= item.horaAgendamento || '' %></td>
+                <td><%= (item.cliente && (item.cliente.nome || item.cliente.name)) ? (item.cliente.nome || item.cliente.name) : (item.cliente ? String(item.cliente) : '') %></td>
+                <td><%= (item.barbeiro && (item.barbeiro.nome || item.barbeiro.name)) ? (item.barbeiro.nome || item.barbeiro.name) : (item.barbeiro ? String(item.barbeiro) : '') %></td>
+                <td><%= (item.servico && (item.servico.nomeServico || item.servico.nome || item.servico.name)) ? (item.servico.nomeServico || item.servico.nome || item.servico.name) : (item.servico ? String(item.servico) : '') %></td>
+                <td><%= item.statusAgendamento || '' %></td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="/agendamento/edt/<%= item._id %>">Editar</a>
+                    <a class="btn btn-sm btn-danger" href="/agendamento/del/<%= item._id %>" onclick="return confirm('Excluir agendamento?')">Excluir</a>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
