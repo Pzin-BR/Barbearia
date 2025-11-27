@@ -1,10 +1,11 @@
+<%-include('../cabecalho.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Novo Agendamento</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="p-4">
 <div class="container">
@@ -14,20 +15,30 @@
     <div class="alert alert-danger"><%= error %></div>
     <% } %>
 
-    <form action="/agendamento/add" method="post" class="row g-3">
-    <div class="col-md-4">
-        <label for="dataAgendamento" class="form-label">Data</label>
-        <input required type="date" class="form-control" id="dataAgendamento" name="dataAgendamento" value="<%= (old && old.dataAgendamento) ? old.dataAgendamento : '' %>">
+    <form action="/agendamento/add" method="post">
+    <div class="form-group">
+        <label for="dataAgendamento">Data</label>
+        <input required type="date" id="dataAgendamento" name="dataAgendamento" value="<%= (old && old.dataAgendamento) ? old.dataAgendamento : '' %>">
     </div>
 
-    <div class="col-md-4">
-        <label for="horaAgendamento" class="form-label">Hora</label>
-        <input required type="time" class="form-control" id="horaAgendamento" name="horaAgendamento" pattern="^([01]\d|2[0-3]):([0-5]\d)$" value="<%= (old && old.horaAgendamento) ? old.horaAgendamento : '' %>">
+    <div class="form-group">
+        <label for="horaAgendamento">Hora</label>
+        <select required id="horaAgendamento" name="horaAgendamento">
+        <option value="14:00" <%= (old && old.horaAgendamento==='14:00') ? 'selected' : '' %>>14:00</option>
+        <option value="14:30" <%= (old && old.horaAgendamento==='14:30') ? 'selected' : '' %>>14:30</option>
+        <option value="15:00" <%= (old && old.horaAgendamento==='15:00') ? 'selected' : '' %>>15:00</option>
+        <option value="15:30" <%= (old && old.horaAgendamento==='15:30') ? 'selected' : '' %>>15:30</option>
+        <option value="16:00" <%= (old && old.horaAgendamento==='16:00') ? 'selected' : '' %>>16:00</option>
+        <option value="16:30" <%= (old && old.horaAgendamento==='16:30') ? 'selected' : '' %>>16:30</option>
+        <option value="17:00" <%= (old && old.horaAgendamento==='17:00') ? 'selected' : '' %>>17:00</option>
+        <option value="17:30" <%= (old && old.horaAgendamento==='17:30') ? 'selected' : '' %>>17:30</option>
+        <option value="18:00" <%= (old && old.horaAgendamento==='18:00') ? 'selected' : '' %>>18:00</option>
+        </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="statusAgendamento" class="form-label">Status</label>
-        <select required id="statusAgendamento" name="statusAgendamento" class="form-select">
+    <div class="form-group">
+        <label for="statusAgendamento">Status</label>
+        <select required id="statusAgendamento" name="statusAgendamento">
         <option value="">-- selecione --</option>
         <option value="Agendado" <%= (old && old.statusAgendamento==='Agendado') ? 'selected' : '' %>>Agendado</option>
         <option value="Concluído" <%= (old && old.statusAgendamento==='Concluído') ? 'selected' : '' %>>Concluído</option>
@@ -35,45 +46,44 @@
         </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="cliente" class="form-label">Cliente</label>
-        <select required id="cliente" name="cliente" class="form-select">
+    <div class="form-group">
+        <label for="cliente">Cliente</label>
+        <select required id="cliente" name="cliente">
         <option value="">-- selecione cliente --</option>
         <% (clientes || []).forEach(function(c){ %>
-            <option value="<%= c._id %>" <%= (old && old.cliente==String(c._id)) ? 'selected' : '' %>><%= c.nome || c.name || c._id %></option>
+            <option value="<%= c._id %>" <%= (old && old.cliente==String(c._id)) ? 'selected' : '' %>><%= c.nomeCliente || c.nome || c.name || c._id %></option>
         <% }) %>
         </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="barbeiro" class="form-label">Barbeiro</label>
-        <select required id="barbeiro" name="barbeiro" class="form-select">
+    <div class="form-group">
+        <label for="barbeiro">Barbeiro</label>
+        <select required id="barbeiro" name="barbeiro">
         <option value="">-- selecione barbeiro --</option>
         <% (barbeiros || []).forEach(function(b){ %>
-            <option value="<%= b._id %>" <%= (old && old.barbeiro==String(b._id)) ? 'selected' : '' %>><%= b.nome || b.name || b._id %></option>
+            <option value="<%= b._id %>" <%= (old && old.barbeiro==String(b._id)) ? 'selected' : '' %>><%= b.nomeBarbeiro || b.nome || b.name || b._id %></option>
         <% }) %>
         </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="servico" class="form-label">Serviço</label>
-        <select required id="servico" name="servico" class="form-select">
+    <div class="form-group">
+        <label for="servico">Serviço</label>
+        <select required id="servico" name="servico">
         <option value="">-- selecione serviço --</option>
         <% (servicos || []).forEach(function(s){ %>
-            <option value="<%= s._id %>" <%= (old && old.servico==String(s._id)) ? 'selected' : '' %>><%= s.nome || s.name || s._id %></option>
+            <option value="<%= s._id %>" <%= (old && old.servico==String(s._id)) ? 'selected' : '' %>><%= s.nomeServico || s.nome || s.name || s._id %></option>
         <% }) %>
         </select>
     </div>
 
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="/agendamento/lst" class="btn btn-secondary">Cancelar</a>
+    <div class="form-group">
+        <button type="submit" class="btn submit">Salvar</button>
+        <a href="/agendamento/lst" class="btn cancelar">Cancelar</a>
     </div>
     </form>
 </div>
 
 <script>
-    // evita datas passadas
     const dateInput = document.getElementById('dataAgendamento');
     if (dateInput) {
     const today = new Date().toISOString().split('T')[0];
@@ -82,3 +92,4 @@
 </script>
 </body>
 </html>
+    <%-include('../rodape.ejs')%>

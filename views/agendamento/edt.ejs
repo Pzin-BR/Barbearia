@@ -1,10 +1,11 @@
+<%-include('../cabecalho.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Editar Agendamento</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="p-4">
 <div class="container">
@@ -14,71 +15,121 @@
     <div class="alert alert-danger"><%= error %></div>
     <% } %>
 
-    <form action="/agendamento/edt/<%= Agendamento && Agendamento._id %>" method="post" class="row g-3">
-    <div class="col-md-4">
-        <label for="dataAgendamento" class="form-label">Data</label>
-        <input required type="date" class="form-control" id="dataAgendamento" name="dataAgendamento"
+    <form action="/agendamento/edt/<%= Agendamento && Agendamento._id %>" method="post">
+    <div class="form-group">
+        <label for="dataAgendamento">Data</label>
+        <input required type="date" id="dataAgendamento" name="dataAgendamento"
             value="<%= (Agendamento && Agendamento.dataAgendamento && Agendamento.dataAgendamento.toISOString) ? Agendamento.dataAgendamento.toISOString().split('T')[0] : (Agendamento && Agendamento.dataAgendamento ? String(Agendamento.dataAgendamento).substr(0,10) : '') %>">
     </div>
 
-    <div class="col-md-4">
-        <label for="horaAgendamento" class="form-label">Hora</label>
-        <input required type="time" class="form-control" id="horaAgendamento" name="horaAgendamento" pattern="^([01]\d|2[0-3]):([0-5]\d)$"
-            value="<%= (Agendamento && Agendamento.horaAgendamento) ? Agendamento.horaAgendamento : '' %>">
-    </div>
-
-    <div class="col-md-4">
-        <label for="statusAgendamento" class="form-label">Status</label>
-        <select required id="statusAgendamento" name="statusAgendamento" class="form-select">
-        <option value="">-- selecione --</option>
-        <option value="Agendado" <%= (Agendamento && Agendamento.statusAgendamento==='Agendado') ? 'selected' : '' %>>Agendado</option>
-        <option value="Concluído" <%= (Agendamento && Agendamento.statusAgendamento==='Concluído') ? 'selected' : '' %>>Concluído</option>
-        <option value="Cancelado" <%= (Agendamento && Agendamento.statusAgendamento==='Cancelado') ? 'selected' : '' %>>Cancelado</option>
+    <div class="form-group">
+        <label for="horaAgendamento">Hora</label>
+        <% const hour = Agendamento && Agendamento.horaAgendamento ? String(Agendamento.horaAgendamento) : ''; %>
+        <select required id="horaAgendamento" name="horaAgendamento">
+          <option value="14:00" <%= hour==='14:00' ? 'selected' : '' %>>14:00</option>
+          <option value="14:30" <%= hour==='14:30' ? 'selected' : '' %>>14:30</option>
+          <option value="15:00" <%= hour==='15:00' ? 'selected' : '' %>>15:00</option>
+          <option value="15:30" <%= hour==='15:30' ? 'selected' : '' %>>15:30</option>
+          <option value="16:00" <%= hour==='16:00' ? 'selected' : '' %>>16:00</option>
+          <option value="16:30" <%= hour==='16:30' ? 'selected' : '' %>>16:30</option>
+          <option value="17:00" <%= hour==='17:00' ? 'selected' : '' %>>17:00</option>
+          <option value="17:30" <%= hour==='17:30' ? 'selected' : '' %>>17:30</option>
+          <option value="18:00" <%= hour==='18:00' ? 'selected' : '' %>>18:00</option>
         </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="cliente" class="form-label">Cliente</label>
-        <select required id="cliente" name="cliente" class="form-select">
-        <option value="">-- selecione cliente --</option>
-        <% (clientes || []).forEach(function(c){ 
-            const cid = String(c._id || c.id);
-            const selCid = Agendamento && Agendamento.cliente ? (String(Agendamento.cliente._id || Agendamento.cliente) === cid) : false;
-        %>
-            <option value="<%= cid %>" <%= selCid ? 'selected' : '' %>><%= c.nome || c.name || cid %></option>
-        <% }) %>
+    <div class="form-group">
+        <label for="statusAgendamento">Status</label>
+        <% const st = Agendamento && Agendamento.statusAgendamento ? String(Agendamento.statusAgendamento) : ''; %>
+        <select required id="statusAgendamento" name="statusAgendamento">
+            <option value="">-- selecione --</option>
+            <option value="Agendado" <%= st==='Agendado' ? 'selected' : '' %>>Agendado</option>
+            <option value="Concluído" <%= st==='Concluído' ? 'selected' : '' %>>Concluído</option>
+            <option value="Cancelado" <%= st==='Cancelado' ? 'selected' : '' %>>Cancelado</option>
         </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="barbeiro" class="form-label">Barbeiro</label>
-        <select required id="barbeiro" name="barbeiro" class="form-select">
-        <option value="">-- selecione barbeiro --</option>
-        <% (barbeiros || []).forEach(function(b){ 
-            const bid = String(b._id || b.id);
-            const selBid = Agendamento && Agendamento.barbeiro ? (String(Agendamento.barbeiro._id || Agendamento.barbeiro) === bid) : false;
-        %>
-            <option value="<%= bid %>" <%= selBid ? 'selected' : '' %>><%= b.nome || b.name || bid %></option>
-        <% }) %>
+    <% 
+      // aceitar nomes vindos do controller tanto no singular quanto no plural
+      var listClientes = [];
+      if (typeof clientes !== 'undefined') listClientes = Array.isArray(clientes) ? clients : [clientes];
+      else if (typeof cliente !== 'undefined') listClientes = Array.isArray(cliente) ? cliente : [cliente];
+
+      var listBarbeiros = [];
+      if (typeof barbeiros !== 'undefined') listBarbeiros = Array.isArray(barbeiros) ? barbeiros : [barbeiros];
+      else if (typeof barbeiro !== 'undefined') listBarbeiros = Array.isArray(barbeiro) ? barbeiro : [barbeiro];
+
+      var listServicos = [];
+      if (typeof servicos !== 'undefined') listServicos = Array.isArray(servicos) ? servicos : [servicos];
+      else if (typeof servico !== 'undefined') listServicos = Array.isArray(servico) ? servico : [servico];
+    %>
+
+    <div class="form-group">
+        <label for="cliente">Cliente</label>
+        <select required id="cliente" name="cliente">
+            <option value="">-- selecione cliente --</option>
+            <% if (listClientes && listClientes.length) { %>
+                <% listClientes.forEach(function(c){ 
+                    var cid = String((c && (c._id || c.id)) || c || '');
+                    var name = (c && (c.nomeCliente || c.nome || c.name)) ? (c.nomeCliente || c.nome || c.name) : cid;
+                    var selectedCid = Agendamento && Agendamento.cliente ? (String(Agendamento.cliente._id || Agendamento.cliente) === cid) : false;
+                %>
+                    <option value="<%= cid %>" <%= selectedCid ? 'selected' : '' %>><%= name %></option>
+                <% }) %>
+            <% } else if (Agendamento && Agendamento.cliente) { 
+                var cid0 = String((Agendamento.cliente && (Agendamento.cliente._id || Agendamento.cliente)) || Agendamento.cliente);
+                var cname0 = (Agendamento.cliente && (Agendamento.cliente.nomeCliente || Agendamento.cliente.nome || Agendamento.cliente.name)) ? (Agendamento.cliente.nomeCliente || Agendamento.cliente.nome || Agendamento.cliente.name) : cid0;
+            %>
+                <option value="<%= cid0 %>" selected><%= cname0 %></option>
+            <% } %>
         </select>
     </div>
 
-    <div class="col-md-4">
-        <label for="servico" class="form-label">Serviço</label>
-        <select required id="servico" name="servico" class="form-select">
-        <option value="">-- selecione serviço --</option>
-        <% (servicos || []).forEach(function(s){ 
-            const sid = String(s._id || s.id);
-            const selSid = Agendamento && Agendamento.servico ? (String(Agendamento.servico._id || Agendamento.servico) === sid) : false;
-        %>
-            <option value="<%= sid %>" <%= selSid ? 'selected' : '' %>><%= s.nomeServico || s.nome || s.name || sid %></option>
-        <% }) %>
+    <div class="form-group">
+        <label for="barbeiro">Barbeiro</label>
+        <select required id="barbeiro" name="barbeiro">
+            <option value="">-- selecione barbeiro --</option>
+            <% if (listBarbeiros && listBarbeiros.length) { %>
+                <% listBarbeiros.forEach(function(b){
+                    var bid = String((b && (b._id || b.id)) || b || '');
+                    var bname = (b && (b.nomeBarbeiro || b.nome || b.name)) ? (b.nomeBarbeiro || b.nome || b.name) : bid;
+                    var selectedBid = Agendamento && Agendamento.barbeiro ? (String(Agendamento.barbeiro._id || Agendamento.barbeiro) === bid) : false;
+                %>
+                    <option value="<%= bid %>" <%= selectedBid ? 'selected' : '' %>><%= bname %></option>
+                <% }) %>
+            <% } else if (Agendamento && Agendamento.barbeiro) {
+                var bid0 = String((Agendamento.barbeiro && (Agendamento.barbeiro._id || Agendamento.barbeiro)) || Agendamento.barbeiro);
+                var bname0 = (Agendamento.barbeiro && (Agendamento.barbeiro.nomeBarbeiro || Agendamento.barbeiro.nome || Agendamento.barbeiro.name)) ? (Agendamento.barbeiro.nomeBarbeiro || Agendamento.barbeiro.nome || Agendamento.barbeiro.name) : bid0;
+            %>
+                <option value="<%= bid0 %>" selected><%= bname0 %></option>
+            <% } %>
         </select>
     </div>
 
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="/agendamento/lst" class="btn btn-secondary">Cancelar</a>
+    <div class="form-group">
+        <label for="servico">Serviço</label>
+        <select required id="servico" name="servico">
+            <option value="">-- selecione serviço --</option>
+            <% if (listServicos && listServicos.length) { %>
+                <% listServicos.forEach(function(s){
+                    var sid = String((s && (s._id || s.id)) || s || '');
+                    var sname = (s && (s.nomeServico || s.nome || s.name)) ? (s.nomeServico || s.nome || s.name) : sid;
+                    var selectedSid = Agendamento && Agendamento.servico ? (String(Agendamento.servico._id || Agendamento.servico) === sid) : false;
+                %>
+                    <option value="<%= sid %>" <%= selectedSid ? 'selected' : '' %>><%= sname %></option>
+                <% }) %>
+            <% } else if (Agendamento && Agendamento.servico) {
+                var sid0 = String((Agendamento.servico && (Agendamento.servico._id || Agendamento.servico)) || Agendamento.servico);
+                var sname0 = (Agendamento.servico && (Agendamento.servico.nomeServico || Agendamento.servico.nome || Agendamento.servico.name || Agendamento.servico.descricaoServico)) ? (Agendamento.servico.nomeServico || Agendamento.servico.nome || Agendamento.servico.name || Agendamento.servico.descricaoServico) : sid0;
+            %>
+                <option value="<%= sid0 %>" selected><%= sname0 %></option>
+            <% } %>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn submit">Salvar</button>
+        <a href="/agendamento/lst" class="btn cancelar">Cancelar</a>
     </div>
     </form>
 </div>
@@ -92,3 +143,4 @@
 </script>
 </body>
 </html>
+<%-include('../rodape.ejs')%>

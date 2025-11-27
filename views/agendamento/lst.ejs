@@ -1,18 +1,19 @@
+<%-include('../cabecalho.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Lista de Agendamentos</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="p-4">
 <div class="container">
     <h1 class="mb-4">Agendamentos</h1>
 
-    <a href="/agendamento/add" class="btn btn-success mb-3">Novo Agendamento</a>
+    <a href="/agendamento/add" class="btn add">Novo Agendamento</a>
 
-    <table class="table table-striped">
+    <table class="aluno-table">
         <thead>
             <tr>
                 <th>Data</th>
@@ -31,13 +32,16 @@
                     <%= (item.dataAgendamento && item.dataAgendamento.toISOString) ? item.dataAgendamento.toISOString().split('T')[0] : (item.dataAgendamento ? String(item.dataAgendamento).substr(0,10) : '') %>
                 </td>
                 <td><%= item.horaAgendamento || '' %></td>
-                <td><%= (item.cliente && (item.cliente.nome || item.cliente.name)) ? (item.cliente.nome || item.cliente.name) : (item.cliente ? String(item.cliente) : '') %></td>
-                <td><%= (item.barbeiro && (item.barbeiro.nome || item.barbeiro.name)) ? (item.barbeiro.nome || item.barbeiro.name) : (item.barbeiro ? String(item.barbeiro) : '') %></td>
-                <td><%= (item.servico && (item.servico.nomeServico || item.servico.nome || item.servico.name)) ? (item.servico.nomeServico || item.servico.nome || item.servico.name) : (item.servico ? String(item.servico) : '') %></td>
+                <!-- Mostrar somente o nome do cliente -->
+                <td><%= (item.cliente && (item.cliente.nomeCliente || item.cliente.nome || item.cliente.name)) ? (item.cliente.nomeCliente || item.cliente.nome || item.cliente.name) : '' %></td>
+                <!-- Mostrar somente o nome do barbeiro -->
+                <td><%= (item.barbeiro && (item.barbeiro.nomeBarbeiro || item.barbeiro.nome || item.barbeiro.name)) ? (item.barbeiro.nomeBarbeiro || item.barbeiro.nome || item.barbeiro.name) : '' %></td>
+                <!-- Mostrar o que é o serviço: prefira nomeServico/nome; se quiser descrição, use descricaoServico -->
+                <td><%= (item.servico && (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico)) ? (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico) : '' %></td>
                 <td><%= item.statusAgendamento || '' %></td>
                 <td>
-                    <a class="btn btn-sm btn-primary" href="/agendamento/edt/<%= item._id %>">Editar</a>
-                    <a class="btn btn-sm btn-danger" href="/agendamento/del/<%= item._id %>" onclick="return confirm('Excluir agendamento?')">Excluir</a>
+                    <a class="btn edit" href="/agendamento/edt/<%= item._id %>">Editar</a>
+                    <a class="btn delete" href="/agendamento/del/<%= item._id %>" onclick="return confirm('Excluir agendamento?')">Excluir</a>
                 </td>
             </tr>
         <% }) %>
@@ -46,3 +50,4 @@
 </div>
 </body>
 </html>
+    <%-include('../rodape.ejs')%>

@@ -1,10 +1,11 @@
+<%-include('../cabecalho.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Editar Serviço</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="p-4">
 <div class="container">
@@ -14,33 +15,34 @@
         <div class="alert alert-danger"><%= error %></div>
     <% } %>
 
-    <form action="/servico/edt/<%= Servico && Servico._id %>" method="post" class="row g-3">
-        <div class="col-md-6">
-            <label for="nomeServico" class="form-label">Nome do Serviço</label>
-            <input required type="text" class="form-control" id="nomeServico" name="nomeServico" value="<%= Servico ? (Servico.nomeServico || '') : '' %>">
+    <form action="/servico/edt/<%= Servico && Servico._id %>" method="post">
+        <div class="form-group">
+            <label for="nomeServico">Nome do Serviço</label>
+            <input required type="text" id="nomeServico" name="nomeServico" value="<%= Servico ? (Servico.nomeServico || '') : '' %>">
         </div>
 
-        <div class="col-md-6">
-            <label for="duracaoServico" class="form-label">Duração</label>
-            <input required type="text" class="form-control" id="duracaoServico" name="duracaoServico" value="<%= Servico ? (Servico.duracaoServico || '') : '' %>">
+        <div class="form-group">
+            <label for="duracaoServico">Duração</label>
+            <input required type="text" id="duracaoServico" name="duracaoServico" value="<%= Servico ? (Servico.duracaoServico || '') : '' %>">
         </div>
 
-        <div class="col-12">
-            <label for="descricaoServico" class="form-label">Descrição</label>
-            <textarea required class="form-control" id="descricaoServico" name="descricaoServico" rows="3"><%= Servico ? (Servico.descricaoServico || '') : '' %></textarea>
+        <div class="form-group">
+            <label for="descricaoServico">Descrição</label>
+            <textarea required id="descricaoServico" name="descricaoServico" rows="3"><%= Servico ? (Servico.descricaoServico || '') : '' %></textarea>
         </div>
 
-        <div class="col-md-4">
-            <label for="precoServico" class="form-label">Preço (R$)</label>
-            <input required type="number" step="0.01" min="0" class="form-control" id="precoServico" name="precoServico"
+        <div class="form-group">
+            <label for="precoServico">Preço (R$)</label>
+            <input required type="number" step="0.01" min="0" id="precoServico" name="precoServico"
                    value="<%= Servico && Servico.precoServico ? Servico.precoServico.toString() : '' %>">
         </div>
 
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Salvar</button>
-            <a href="/servico/lst" class="btn btn-secondary">Cancelar</a>
+        <div class="form-group">
+            <button type="submit" class="btn submit">Salvar</button>
+            <a href="/servico/lst" class="btn cancelar">Cancelar</a>
         </div>
     </form>
 </div>
 </body>
 </html>
+    <%-include('../rodape.ejs')%>
