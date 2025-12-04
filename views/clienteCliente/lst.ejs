@@ -1,4 +1,4 @@
-<%-include('../cabecalhoAdmin.ejs')%>
+<%-include('../cabecalhoCliente.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -28,10 +28,6 @@
                 <td><%= item.nomeCliente || '' %></td>
                 <td><%= item.telefoneCliente || '' %></td>
                 <td><%= item.emailCliente || '' %></td>
-                <td>
-                    <a class="btn edit" href="/cliente/edt/<%= item._id %>">Editar</a>
-                    <a class="btn delete" href="/cliente/del/<%= item._id %>" onclick="return confirm('Excluir cliente?')">Excluir</a>
-                </td>
             </tr>
         <% }) %>
         </tbody>

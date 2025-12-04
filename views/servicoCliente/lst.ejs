@@ -1,4 +1,4 @@
-<%-include('../cabecalhoAdmin.ejs')%>
+<%-include('../cabecalho.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -30,10 +30,7 @@
                 <td><%= item.duracaoServico || '' %></td>
                 <td><%= item.descricaoServico || '' %></td>
                 <td><%= item.precoServico ? item.precoServico.toString() : '' %></td>
-                <td>
-                    <a class="btn edit" href="/servico/edt/<%= item._id %>">Editar</a>
-                    <a class="btn delete" href="/servico/del/<%= item._id %>" onclick="return confirm('Excluir serviço?')">Excluir</a>
-                </td>
+
             </tr>
         <% }) %>
         </tbody>

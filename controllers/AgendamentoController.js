@@ -5,7 +5,7 @@ import Servico from '../models/servico.js';
 
 export default class AgendamentoController {
 
-constructor (caminhoBase = 'agendamento/') {
+constructor (caminhoBase = 'agendamento/', caminhoBaseCliente= 'agendamentoCliente/') {
     this.caminhoBase = caminhoBase;
 
     this.openAdd = async (req, res) => {
@@ -67,6 +67,69 @@ constructor (caminhoBase = 'agendamento/') {
     this.Excluir = async (req, res) => {
     await Agendamento.findByIdAndDelete(req.params.id);
     res.redirect('/' + this.caminhoBase + 'lst');
+    };
+//COMEÇA O CLIENTE
+    this.caminhoBaseCliente = caminhoBaseCliente;
+
+    this.openAdd = async (req, res) => {
+    try {
+        const clientes = await Cliente.find({});
+        const barbeiros = await Barbeiro.find({});
+        const servicos = await Servico.find({});
+        res.render(this.caminhoBaseCliente + 'add', { clientes, barbeiros, servicos, old: {}, error: null });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Erro interno');
+    }
+    };
+
+    this.add = async (req, res) => {
+    try {
+        console.log(req.body);
+        const { dataAgendamento, horaAgendamento, statusAgendamento, cliente, barbeiro, servico } = req.body;
+
+        if (!dataAgendamento || !horaAgendamento || !statusAgendamento || !cliente || !barbeiro || !servico) {
+        const clientes = await Cliente.find({});
+        const barbeiros = await Barbeiro.find({});
+        const servicos = await Servico.find({});
+        return res.render(this.caminhoBaseCliente + 'add', { clientes, barbeiros, servicos, old: req.body, error: 'Preencha todos os campos.' });
+        }
+
+        await Agendamento.create({
+        dataAgendamento: new Date(dataAgendamento),
+        horaAgendamento,
+        statusAgendamento,
+        cliente,
+        barbeiro,
+        servico
+        });
+
+        res.redirect('/' + this.caminhoBaseCliente + 'lst');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Erro ao salvar agendamento');
+    }
+    };
+
+    this.list = async (req, res) => {
+    const resultado = await Agendamento.find({}).populate('cliente barbeiro servico');
+    res.render(this.caminhoBaseCliente + 'lst', { Agendamento: resultado });
+    };
+
+    this.openEdt = async (req, res) => {
+    const id = req.params.id;
+    const resultado = await Agendamento.findById(id);
+    res.render(this.caminhoBaseCliente + 'edt', { Agendamento: resultado });
+    };
+
+    this.Edt = async (req, res) => {
+    await Agendamento.findByIdAndUpdate(req.params.id, req.body);
+    res.redirect('/' + this.caminhoBaseCliente + 'lst');
+    };
+
+    this.Excluir = async (req, res) => {
+    await Agendamento.findByIdAndDelete(req.params.id);
+    res.redirect('/' + this.caminhoBaseCliente + 'lst');
     };
 }
 }

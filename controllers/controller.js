@@ -15,5 +15,13 @@
           res.render('index')
         };
 
+          this.cliente = async (req, res) => {
+          res.render('indexCliente')
+        };
+
+        this.admin = async (req, res) => {
+          res.render('indexAdmin')
+        };
+
     }
  }

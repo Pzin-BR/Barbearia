@@ -1,4 +1,4 @@
-<%-include('../cabecalhoAdmin.ejs')%>
+<%-include('../cabecalhoCliente.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -30,10 +30,6 @@
                 <td><%= item.especialidadeBarbeiro || '' %></td>
                 <td><%= item.telefoneBarbeiro || '' %></td>
                 <td><%= item.emailBarbeiro || '' %></td>
-                <td>
-                    <a class="btn edit" href="/barbeiro/edt/<%= item._id %>">Editar</a>
-                    <a class="btn delete" href="/barbeiro/del/<%= item._id %>" onclick="return confirm('Excluir barbeiro?')">Excluir</a>
-                </td>
             </tr>
         <% }) %>
         </tbody>

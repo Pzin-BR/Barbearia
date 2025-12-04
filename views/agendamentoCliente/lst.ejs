@@ -1,4 +1,4 @@
-<%-include('../cabecalhoAdmin.ejs')%>
+<%-include('../cabecalhoCliente.ejs')%>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -39,10 +39,6 @@
                 <!-- Mostrar o que é o serviço: prefira nomeServico/nome; se quiser descrição, use descricaoServico -->
                 <td><%= (item.servico && (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico)) ? (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico) : '' %></td>
                 <td><%= item.statusAgendamento || '' %></td>
-                <td>
-                    <a class="btn edit" href="/agendamento/edt/<%= item._id %>">Editar</a>
-                    <a class="btn delete" href="/agendamento/del/<%= item._id %>" onclick="return confirm('Excluir agendamento?')">Excluir</a>
-                </td>
             </tr>
         <% }) %>
         </tbody>
