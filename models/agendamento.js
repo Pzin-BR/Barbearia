@@ -6,7 +6,11 @@ const Agendamento = conexao.Schema({
     statusAgendamento: {type:String, required:true},
     cliente: {type:conexao.Schema.Types.ObjectId, ref:'Cliente', required:true},
     barbeiro: {type:conexao.Schema.Types.ObjectId, ref:'Barbeiro', required:true},
-    servico: {type:conexao.Schema.Types.ObjectId, ref:'Servico', required:true}
+    servico: {type:conexao.Schema.Types.ObjectId, ref:'Servico', required:true},
+    imagemCorte: {
+      type: String,
+      default: null
+    }
 
 }) 
 

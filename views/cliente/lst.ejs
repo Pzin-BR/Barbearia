@@ -13,30 +13,46 @@
 
     <a href="/cliente/add" class="btn add">Novo Cliente</a>
 
+    <!-- Formulário de Busca -->
+    <div style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px;">
+        <form method="get" action="/cliente/lst" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" name="busca" placeholder="Buscar por nome, email ou telefone..." 
+                   value="<%= busca %>" style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <button type="submit" class="btn submit">Buscar</button>
+            <a href="/cliente/lst" class="btn" style="background: #999;">Limpar</a>
+        </form>
+    </div>
+
     <table class="aluno-table">
         <thead>
             <tr>
                 <th>Nome</th>
-                <th>Telefone</th>
                 <th>Email</th>
+                <th>Telefone</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-        <% (Cliente || []).forEach(function(item){ %>
+        <% if (Cliente && Cliente.length > 0) { %>
+            <% (Cliente || []).forEach(function(item){ %>
+                <tr>
+                    <td><%= item.nomeCliente || '' %></td>
+                    <td><%= item.emailCliente || '' %></td>
+                    <td><%= item.telefoneCliente || '' %></td>
+                    <td>
+                        <a class="btn edit" href="/cliente/edt/<%= item._id %>">Editar</a>
+                        <a class="btn delete" href="/cliente/del/<%= item._id %>" onclick="return confirm('Excluir cliente?')">Excluir</a>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } else { %>
             <tr>
-                <td><%= item.nomeCliente || '' %></td>
-                <td><%= item.telefoneCliente || '' %></td>
-                <td><%= item.emailCliente || '' %></td>
-                <td>
-                    <a class="btn edit" href="/cliente/edt/<%= item._id %>">Editar</a>
-                    <a class="btn delete" href="/cliente/del/<%= item._id %>" onclick="return confirm('Excluir cliente?')">Excluir</a>
-                </td>
+                <td colspan="4" style="text-align: center; color: #999; padding: 20px;">Nenhum cliente encontrado</td>
             </tr>
-        <% }) %>
+        <% } %>
         </tbody>
     </table>
 </div>
 </body>
 </html>
-    <%-include('../rodape.ejs')%>
+<%-include('../rodape.ejs')%>

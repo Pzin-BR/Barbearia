@@ -13,6 +13,24 @@
 
     <a href="/agendamento/add" class="btn add">Novo Agendamento</a>
 
+    <!-- Formulário de Busca -->
+    <div style="margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px;">
+        <form method="get" action="/agendamento/lst" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" name="busca" placeholder="Buscar por cliente, barbeiro ou serviço..." 
+                   value="<%= busca %>" style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            
+            <select name="filtroStatus" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">Todos os Status</option>
+                <option value="Agendado" <%= filtroStatus === 'Agendado' ? 'selected' : '' %>>Agendado</option>
+                <option value="Concluído" <%= filtroStatus === 'Concluído' ? 'selected' : '' %>>Concluído</option>
+                <option value="Cancelado" <%= filtroStatus === 'Cancelado' ? 'selected' : '' %>>Cancelado</option>
+            </select>
+            
+            <button type="submit" class="btn submit">Buscar</button>
+            <a href="/agendamento/lst" class="btn" style="background: #999;">Limpar</a>
+        </form>
+    </div>
+
     <table class="aluno-table">
         <thead>
             <tr>
@@ -21,33 +39,44 @@
                 <th>Cliente</th>
                 <th>Barbeiro</th>
                 <th>Serviço</th>
+                <th>Foto</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
-        <% (Agendamento || []).forEach(function(item){ %>
+        <% if (Agendamento && Agendamento.length > 0) { %>
+            <% (Agendamento || []).forEach(function(item){ %>
+                <tr>
+                    <td>
+                        <%= (item.dataAgendamento && item.dataAgendamento.toISOString) ? item.dataAgendamento.toISOString().split('T')[0] : (item.dataAgendamento ? String(item.dataAgendamento).substr(0,10) : '') %>
+                    </td>
+                    <td><%= item.horaAgendamento || '' %></td>
+                    <td><%= (item.cliente && (item.cliente.nomeCliente || item.cliente.nome || item.cliente.name)) ? (item.cliente.nomeCliente || item.cliente.nome || item.cliente.name) : '' %></td>
+                    <td><%= (item.barbeiro && (item.barbeiro.nomeBarbeiro || item.barbeiro.nome || item.barbeiro.name)) ? (item.barbeiro.nomeBarbeiro || item.barbeiro.nome || item.barbeiro.name) : '' %></td>
+                    <td><%= (item.servico && (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico)) ? (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico) : '' %></td>
+                    <td>
+                        <% if (item.imagemCorte) { %>
+                            <img src="<%= item.imagemCorte %>" alt="Corte" style="max-width: 60px; max-height: 60px; border-radius: 4px;">
+                        <% } else { %>
+                            <span style="color: #999;">Sem foto</span>
+                        <% } %>
+                    </td>
+                    <td><%= item.statusAgendamento || '' %></td>
+                    <td>
+                        <a class="btn edit" href="/agendamento/edt/<%= item._id %>">Editar</a>
+                        <a class="btn delete" href="/agendamento/del/<%= item._id %>" onclick="return confirm('Excluir agendamento?')">Excluir</a>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } else { %>
             <tr>
-                <td>
-                    <%= (item.dataAgendamento && item.dataAgendamento.toISOString) ? item.dataAgendamento.toISOString().split('T')[0] : (item.dataAgendamento ? String(item.dataAgendamento).substr(0,10) : '') %>
-                </td>
-                <td><%= item.horaAgendamento || '' %></td>
-                <!-- Mostrar somente o nome do cliente -->
-                <td><%= (item.cliente && (item.cliente.nomeCliente || item.cliente.nome || item.cliente.name)) ? (item.cliente.nomeCliente || item.cliente.nome || item.cliente.name) : '' %></td>
-                <!-- Mostrar somente o nome do barbeiro -->
-                <td><%= (item.barbeiro && (item.barbeiro.nomeBarbeiro || item.barbeiro.nome || item.barbeiro.name)) ? (item.barbeiro.nomeBarbeiro || item.barbeiro.nome || item.barbeiro.name) : '' %></td>
-                <!-- Mostrar o que é o serviço: prefira nomeServico/nome; se quiser descrição, use descricaoServico -->
-                <td><%= (item.servico && (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico)) ? (item.servico.nomeServico || item.servico.nome || item.servico.name || item.servico.descricaoServico) : '' %></td>
-                <td><%= item.statusAgendamento || '' %></td>
-                <td>
-                    <a class="btn edit" href="/agendamento/edt/<%= item._id %>">Editar</a>
-                    <a class="btn delete" href="/agendamento/del/<%= item._id %>" onclick="return confirm('Excluir agendamento?')">Excluir</a>
-                </td>
+                <td colspan="8" style="text-align: center; color: #999; padding: 20px;">Nenhum agendamento encontrado</td>
             </tr>
-        <% }) %>
+        <% } %>
         </tbody>
     </table>
 </div>
 </body>
 </html>
-    <%-include('../rodape.ejs')%>
+<%-include('../rodape.ejs')%>

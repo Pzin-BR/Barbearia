@@ -34,10 +34,30 @@ export default class ClienteController
             const resultado = await Cliente.find({})
             res.render(caminhoBase + 'lst', {Cliente:resultado})
                 }
-        this.list = async(req, res)=>{
-            const resultado = await Cliente.find({})
-            res.render(caminhoBase + 'lst', {Cliente:resultado})
-        }
+        this.list = async (req, res) => {
+            try {
+                const { busca } = req.query;
+                let filtro = {};
+
+                if (busca && busca.trim() !== '') {
+                    const regex = new RegExp(busca, 'i');
+                    filtro.$or = [
+                        { nomeCliente: regex },
+                        { emailCliente: regex },
+                        { telefoneCliente: regex }
+                    ];
+                }
+
+                const resultado = await Cliente.find(filtro).sort({ nomeCliente: 1 });
+                res.render(this.caminhoBase + 'lst', { 
+                    Cliente: resultado,
+                    busca: busca || ''
+                });
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Erro ao buscar clientes');
+            }
+    }
             //passar quem eu quero editar
             this.openEdt = async(req, res)=>{
             const id = req.params.id

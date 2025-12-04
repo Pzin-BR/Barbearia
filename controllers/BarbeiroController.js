@@ -37,10 +37,29 @@ export default class BarbeiroController
             }
         }
 
-        this.list = async(req, res)=>
-        {
-            const resultado = await Barbeiro.find({})
-            res.render(this.caminhoBase + 'lst', { Barbeiro: resultado })
+        this.list = async (req, res) => {
+            try {
+                const { busca } = req.query;
+                let filtro = {};
+
+                if (busca && busca.trim() !== '') {
+                    const regex = new RegExp(busca, 'i');
+                    filtro.$or = [
+                        { nomeBarbeiro: regex },
+                        { emailBarbeiro: regex },
+                        { telefoneBarbeiro: regex }
+                    ];
+                }
+
+                const resultado = await Barbeiro.find(filtro).sort({ nomeBarbeiro: 1 });
+                res.render(this.caminhoBase + 'lst', { 
+                    Barbeiro: resultado,
+                    busca: busca || ''
+                });
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Erro ao buscar barbeiros');
+            }
         }
 
         this.openEdt = async(req, res)=>

@@ -15,7 +15,7 @@
     <div class="alert alert-danger"><%= error %></div>
     <% } %>
 
-    <form action="/agendamento/edt/<%= Agendamento && Agendamento._id %>" method="post">
+    <form action="/agendamento/edt/<%= Agendamento && Agendamento._id %>" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="dataAgendamento">Data</label>
         <input required type="date" id="dataAgendamento" name="dataAgendamento"
@@ -125,6 +125,17 @@
                 <option value="<%= sid0 %>" selected><%= sname0 %></option>
             <% } %>
         </select>
+    </div>
+
+    <div class="form-group">
+        <label for="imagemCorte">Foto do Corte (exemplo)</label>
+        <% if (Agendamento && Agendamento.imagemCorte) { %>
+            <div class="mb-2">
+                <img src="<%= Agendamento.imagemCorte %>" alt="Foto do corte" style="max-width: 200px; max-height: 200px;">
+            </div>
+        <% } %>
+        <input type="file" id="imagemCorte" name="imagemCorte" accept="image/*">
+        <small>Máximo 5MB. Aceita: JPEG, JPG, PNG, GIF</small>
     </div>
 
     <div class="form-group">

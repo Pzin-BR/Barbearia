@@ -40,10 +40,28 @@ export default class ServicoController
             }
         }
 
-        this.list = async(req, res)=>
-        {
-            const resultado = await Servico.find({})
-            res.render(this.caminhoBase + 'lst', { Servico: resultado })
+        this.list = async (req, res) => {
+            try {
+                const { busca } = req.query;
+                let filtro = {};
+
+                if (busca && busca.trim() !== '') {
+                    const regex = new RegExp(busca, 'i');
+                    filtro.$or = [
+                        { nomeServico: regex },
+                        { descricaoServico: regex }
+                    ];
+                }
+
+                const resultado = await Servico.find(filtro).sort({ nomeServico: 1 });
+                res.render(this.caminhoBase + 'lst', { 
+                    Servico: resultado,
+                    busca: busca || ''
+                });
+            } catch (err) {
+                console.error(err);
+                res.status(500).send('Erro ao buscar serviços');
+            }
         }
 
         this.openEdt = async(req, res)=>
